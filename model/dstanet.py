@@ -220,7 +220,7 @@ class STAttentionBlock(nn.Module):
 
 class DSTANet(nn.Module):
     def __init__(self, num_class=60, num_point=25, num_frame=32, num_subset=3, dropout=0., config=None, num_person=2,
-                 num_channel=3, glo_reg_s=True, att_s=True, glo_reg_t=False, att_t=True,
+                 num_channel=2, glo_reg_s=True, att_s=True, glo_reg_t=False, att_t=True,
                  use_temporal_att=True, use_spatial_att=True, attentiondrop=0, dropout2d=0, use_pet=True, use_pes=True):
         super(DSTANet, self).__init__()
 
@@ -269,8 +269,8 @@ class DSTANet(nn.Module):
     def forward(self, x):
         """
 
-        :param x: N M C T V
-        :return: classes scores
+        :param x: batch_size num_subset num_frame num_points num_person
+        :return: batch_size classes
         """
         N, C, T, V, M = x.shape
 
@@ -300,3 +300,4 @@ if __name__ == '__main__':
     net = DSTANet(config=config)  # .cuda()
     ske = torch.rand([2, 3, 32, 25, 2])  # .cuda()
     print(net(ske).shape)
+    print(net(ske))

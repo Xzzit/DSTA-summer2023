@@ -1,6 +1,10 @@
+import os
+import sys
+root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+sys.path.append(root_dir)
 
-from torch.utils.data import DataLoader, Dataset
-from dataset.skeleton import Skeleton, vis
+from torch.utils.data import DataLoader
+from dataset.skeleton import Skeleton
 
 
 edge = ((0, 1),
@@ -19,33 +23,18 @@ class DHG_SKE(Skeleton):
         self.edge = edge
 
 
-def test(data_path, label_path, vid=None, edge=None, is_3d=False, mode='train'):
+if __name__ == '__main__':
+    data_path = "/home/xzzit/DSTA-Net/SHREC_data/train_skeleton.pkl"
+    label_path = "/home/xzzit/DSTA-Net/SHREC_data/train_label_14.pkl"
+
     loader = DataLoader(
-        dataset=DHG_SKE(data_path, label_path, window_size=150, final_size=128, mode=mode,
+        dataset=DHG_SKE(data_path, label_path, window_size=150, final_size=10, mode='train',
                         random_choose=True, center_choose=False, decouple_spatial=False, num_skip_frame=None),
         batch_size=1,
         shuffle=False,
         num_workers=0)
 
-    labels = open('../prepare/shrec/label_28.txt', 'r').readlines()
     for i, (data, label) in enumerate(loader):
-        if i%100==0:
-            vis(data[0].numpy(), edge=edge, view=0.2, pause=0.01, title=labels[label.item()].rstrip())
-
-    sample_name = loader.dataset.sample_name
-    index = sample_name.index(vid)
-    if mode != 'train':
-        data, label, index = loader.dataset[index]
-    else:
-        data, label = loader.dataset[index]
-    # skeleton
-    vis(data, edge=edge, view=0.2, pause=0.1, title=labels[label].rstrip())
-
-
-if __name__ == '__main__':
-    data_path = "/your/path/to/shrec_hand/train_skeleton.pkl"
-    label_path = "/your/path/to/shrec_hand/train_label_28.pkl"
-    # data_path = "/your/path/to/dhg_hand_shrec/train_skeleton_ddnet.pkl"
-    # label_path = "/your/path/to/dhg_hand_shrec/train_label_ddnet_14.pkl"
-    # test(data_path, label_path, vid=1, edge=edge, is_3d=True, mode='train')
-    test(data_path, label_path, vid='14_2_27_5', edge=edge, is_3d=True, mode='train')
+        print(data.shape)
+        print(label.shape)
+        break

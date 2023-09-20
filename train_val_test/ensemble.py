@@ -5,7 +5,7 @@ import numpy as np
 from tqdm import tqdm
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--label', default='/your/path/to/ntu_60/xsub/val_label.pkl',
+parser.add_argument('--label', default='/home/xzzit/DSTA-Net/SHREC_data/val_label_14.pkl',
                     help='')
 parser.add_argument('--spatial_temporal', default='./work_dir/ntu60/dstanet_drop0_6090120_128_ST')
 parser.add_argument('--spatial', default='./work_dir/ntu60/dstanet_drop0_6090120_128_S')
