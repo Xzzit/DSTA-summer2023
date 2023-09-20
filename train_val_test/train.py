@@ -12,11 +12,13 @@ sys.path.extend(['../'])
 import time
 import torch
 import setproctitle
-# from tensorboard_logger import configure, log_value
 from tensorboardX import SummaryWriter
 from tqdm import tqdm
 from collections import OrderedDict
-import pickle
+
+from method_choose import *
+import parser_args
+from utility.log import TimerBlock
 
 from method_choose import *
 import parser_args
@@ -163,4 +165,3 @@ with TimerBlock("Good Luck") as block:
     block.log(
         'Best model: ' + args.model_saved_name + '-' + str(best_epoch) + '-' + str(best_step) + '.state, acc: ' + str(
             best_accu))
-    # block.save(os.path.join(args.model_saved_name, 'log.txt'))

@@ -1,8 +1,6 @@
 import argparse
 import os
-from utility.log import TimerBlock
 import colorama
-import torch
 import shutil
 import yaml
 from easydict import EasyDict as ed

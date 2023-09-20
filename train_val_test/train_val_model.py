@@ -1,13 +1,7 @@
 import torch
-from torch.autograd import Variable
-import torch.nn as nn
 from tqdm import tqdm
 from utility.log import IteratorTimer
-# import torchvision
 import numpy as np
-import time
-import pickle
-import cv2
 
 
 def to_onehot(num_class, label, alpha):
@@ -71,8 +65,6 @@ def train_classifier(data_loader, model, loss_function, optimizer, global_step, 
         loss = loss_function(outputs, targets)
         ls = loss.data.item()
         acc = torch.mean((predict_label == labels.data).float()).item()
-        # ls = loss.data[0]
-        # acc = torch.mean((predict_label == labels.data).float())
         lr = optimizer.param_groups[0]['lr']
         process.set_description(
             'Train: acc: {:4f}, loss: {:4f}, batch time: {:4f}, lr: {:4f}'.format(acc, ls,
@@ -84,16 +76,6 @@ def train_classifier(data_loader, model, loss_function, optimizer, global_step, 
             writer.add_scalar('acc', acc, global_step)
             writer.add_scalar('loss', ls, global_step)
             writer.add_scalar('batch_time', process.iterable.last_duration, global_step)
-            # if len(inputs.shape) == 5:
-            #     if index % 500 == 0:
-            #         img = inputs.data.cpu().permute(2, 0, 1, 3, 4)
-            #         # NCLHW->LNCHW
-            #         img = torchvision.utils.make_grid(img[0::4, 0][0:4], normalize=True)
-            #         writer.add_image('img', img, global_step=global_step)
-            # elif len(inputs.shape) == 4:
-            #     if index % 500 == 0:
-            #         writer.add_image('img', ((inputs.cpu().numpy()[0] + 128) * 1).astype(np.uint8).transpose(1, 2, 0),
-            #                          global_step=global_step)
 
     process.close()
     return global_step
@@ -105,12 +87,9 @@ def val_classifier(data_loader, model, loss_function, global_step, args, writer)
     loss_total = 0
     step = 0
     process = tqdm(IteratorTimer(data_loader), desc='Val: ')
-    # s = time.time()
-    # t=0
     score_frag = []
     all_pre_true = []
     for index, (inputs, labels) in enumerate(process):
-        # label_onehot = to_onehot(args.class_num, labels, args.label_smoothing_num)
         if args.loss == 'cross_entropy_naive':
             targets = to_onehot(args.class_num, labels, args.label_smoothing_num)
         else:
@@ -134,7 +113,6 @@ def val_classifier(data_loader, model, loss_function, global_step, args, writer)
             all_pre_true.append(str(x) + ',' + str(true[i]) + '\n')
 
         right_num = torch.sum(predict_label == labels.data).item()
-        # right_num = torch.sum(predict_label == labels.data)
         batch_num = labels.data.size(0)
         acc = right_num / batch_num
         ls = loss.data.item()

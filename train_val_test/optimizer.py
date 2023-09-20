@@ -1,6 +1,5 @@
 import torch
 from torch.optim.optimizer import Optimizer, required
-import numpy as np
 
 
 class SGD(Optimizer):
@@ -61,8 +60,7 @@ class SGD(Optimizer):
                         d_p = d_p.add(momentum, buf)
                     else:
                         d_p = buf
-                        # if i == 0 and j == 0 and self.writer is not None:
-                        #     self.writer.add_histogram('Ibuf', buf, self.num)
+
                 p.data.add_(-group['lr'], d_p)
 
         return loss

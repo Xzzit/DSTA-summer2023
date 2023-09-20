@@ -5,7 +5,7 @@ print('Python %s on %s' % (sys.version, sys.platform))
 sys.path.extend(['../'])
 import pickle
 from train_val_test import train_val_model, parser_args
-from utility.log import TimerBlock, IteratorTimer
+from utility.log import TimerBlock
 from method_choose.data_choose import data_choose, init_seed
 from method_choose.model_choose import model_choose
 from method_choose.loss_choose import loss_choose
