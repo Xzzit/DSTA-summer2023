@@ -52,7 +52,7 @@ batch_size: 32
 worker: 16
 pin_memory: False
 num_epoch_per_save: 100
-model_saved_name: './work_dir/summer23/dstanet_test'
+model_saved_name: './work_dir/summer23/dstanet_inference'
 last_model:
 pre_trained_model: '/home/xzzit/DSTA-summer2023/work_dir/summer23/dstanet_v3_36-latest.state'
 ignore_weights: []
