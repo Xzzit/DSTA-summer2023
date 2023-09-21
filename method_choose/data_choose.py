@@ -1,9 +1,6 @@
 from __future__ import print_function, division
 
-# import torchvision
-# import torchvision.transforms as transforms
 from torch.utils.data import DataLoader
-
 import torch
 import numpy as np
 import random
