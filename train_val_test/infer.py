@@ -72,56 +72,6 @@ def load_model(args, block):
     return model
 
 
-def infer(data_loader, model, args):
-    right_num_total = 0
-    total_num = 0
-    loss_total = 0
-    step = 0
-    process = tqdm(IteratorTimer(data_loader), desc='Val: ')
-    score_frag = []
-    all_pre_true = []
-    for index, (inputs, labels) in enumerate(process):
-        if args.loss == 'cross_entropy_naive':
-            targets = to_onehot(args.class_num, labels, args.label_smoothing_num)
-        else:
-            targets = labels
-
-        with torch.no_grad():
-            inputs, targets, labels = inputs.cuda(non_blocking=True), targets.cuda(non_blocking=True), labels.cuda(
-                non_blocking=True)
-            outputs = model(inputs)
-            if len(outputs.data.shape) == 3:  # T N cls
-                _, predict_label = torch.max(outputs.data[:, :, :-1].mean(0), 1)
-                score_frag.append(outputs.data.cpu().numpy().transpose(1,0,2))
-            else:
-                _, predict_label = torch.max(outputs.data, 1)
-                score_frag.append(outputs.data.cpu().numpy())
-
-        predict = list(predict_label.cpu().numpy())
-        true = list(labels.data.cpu().numpy())
-        for i, x in enumerate(predict):
-            all_pre_true.append(str(x) + ',' + str(true[i]) + '\n')
-
-        right_num = torch.sum(predict_label == labels.data).item()
-        batch_num = labels.data.size(0)
-        acc = right_num / batch_num
-        ls = loss.data.item()
-
-        right_num_total += right_num
-        total_num += batch_num
-        loss_total += ls
-        step += 1
-
-        process.set_description(
-            'Val-batch: acc: {:4f}, loss: {:4f}, time: {:4f}'.format(acc, ls, process.iterable.last_duration))
-
-    process.close()
-    accuracy = right_num_total / total_num
-    print('Accuracy: ', accuracy)
-
-    return accuracy, all_pre_true
-
-
 with TimerBlock("Good Luck") as block:
     # params
     args = parser_args.parser_args(block)
