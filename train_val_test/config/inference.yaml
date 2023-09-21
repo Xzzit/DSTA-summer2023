@@ -49,12 +49,12 @@ train: 'classify'
 mode: 'train_val'
 loss: 'cross_entropy'
 batch_size: 32
-worker: 32
+worker: 16
 pin_memory: False
 num_epoch_per_save: 100
-model_saved_name: './work_dir/summer23/dstanet_v3_36_lr0001'
+model_saved_name: './work_dir/summer23/dstanet_test'
 last_model:
-pre_trained_model:
+pre_trained_model: '/home/xzzit/DSTA-summer2023/work_dir/summer23/dstanet_v3_36-latest.state'
 ignore_weights: []
 label_smoothing_num: 0
 mix_up_num: 0
